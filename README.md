@@ -18,14 +18,32 @@ I am currently developing a python equivalent that will be much more suited to t
 advanced investor who can expectedly have thousands of transactions over numerous currencies.
 
 ## Setup
-You will need to enable scripting runtime to use this report.
+You will need to enable scripting runtime to use this program's reporting capabilities.
 
 Add the developer icon to your ribbon in excel (in File >> Settings >> Options). From then, open the VBA module. Then go to tools >> references >> and make sure
 "Visual Basic for Applications" and "Scripting Runtime" are both checked.
 
+Alternatively, you could download the VBA modules seperately from this repository and make your file yourself. If you do this, you'll need to keep the
+naming conventions of the excel listobjects, sheet, and table headers the same as  **exactly** as they are in the original. To perfectly copy the original file, 
+
+The transaction table ("transaction_tbl") should be an excel table, or a lstobject, located on the "Transaction" sheet, with at least column headers (as datatypes/"values") _exactly_ of:
+<pre>
+Date       |	             Type               | Ticker  | Transacted Units | Transacted Price (per unit) | Fees
+
+date-type   | "Buy", Sell", "Fee," or "Income"  | string  |  float/int/cur   |        float/int/cur        | float/int/cur
+
+</pre>
+
+Additionally, the VBA module names and subroutines should remain the names as you downloaded them, unless you'd want to refactor your code, hich is difficult in VBA
+
+Other than that, the rest of the formatting/column headers of resulting tables are auto generated.
+
+Again, VBA code relies on names to set variables for the reports to run. If you are a VBA wiz and want to change the names of the objects
+throughout the main macros in the report (there aren't that many), then feel free.
+
 ## Use
 To use, you will fill out the main transaction table on the "Transaction" sheet like you would any other ledger of transactions. 
-To run the report effectivel, you'll need the date of transaction, the type, the currency, th quantity, and the value. More on this below under **Formatting**.
+To run the report effectivel, you'll need the date of transaction, the type, the currency, the quantity, and the value. More on this below under **Setup**.
 
 This workbook makes a few assumptions on how you fill out your main transaction table, where you will log buys, sales, fees, and earned income:
 - Your transactions are accurate
@@ -33,20 +51,6 @@ This workbook makes a few assumptions on how you fill out your main transaction 
 - There are no negative values
 - You have only transactions of "Buy," "Sell," "Income," and "Fee"
   - currently there are no features for logging use of crypto as payment, nor gifts
-
-## Formatting
-Because excel listobjects are identified by names, you should keep several things as they appear **exactly**, unless you are a VBA wiz and want to change the column headers
-throughout the main macros in the report (there aren't that many).
-
-The transaction table ("transaction_tbl") should be located on the "Transaction" sheet, with at least column headers (as datatypes/"values") _exactly_ of:
-<pre>
-Date (UTC)  |	             Type               | Ticker  | Transacted Units | Transacted Price (per unit) | Fees
-
-date-type   | "Buy", Sell", "Fee," or "Income"  | string  |  float/int/cur   |        float/int/cur        | float/int/cur
-
-</pre>
-
-Other than that, the rest of the formatting/column headers of resulting tables are auto generated.
 
 ## Report Process
 
