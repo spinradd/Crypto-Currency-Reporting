@@ -27,12 +27,9 @@ Alternatively, you could download the VBA modules seperately from this repositor
 naming conventions of the excel listobjects, sheet, and table headers the same as  **exactly** as they are in the original. To perfectly copy the original file, 
 
 The transaction table ("transaction_tbl") should be an excel table, or a lstobject, located on the "Transaction" sheet, with at least column headers (as datatypes/"values") _exactly_ of:
-<pre>
-Date       |	             Type               | Ticker  | Transacted Units | Transacted Price (per unit) | Fees
-
-date-type   | "Buy", Sell", "Fee," or "Income"  | string  |  float/int/cur   |        float/int/cur        | float/int/cur
-
-</pre>
+| Date | Type | Ticker  | Transacted Units | Transacted Price (per unit) | Fees |
+|---|---|---|---|---|---|
+| date-type | "Buy", Sell", "Fee," or "Income" | string | float/int/cur | float/int/cur | float/int/cur |
 
 Additionally, the VBA module names and subroutines should remain the names as you downloaded them, unless you'd want to refactor your code, hich is difficult in VBA
 
