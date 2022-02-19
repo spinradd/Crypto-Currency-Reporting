@@ -1,4 +1,4 @@
-# Crypto-Currency-Reporting
+# Crypto-Reporting
 A VBA application to help you keep track of your cryptocurrency holdings, income, and gains/losses
 
 ## Basics
