@@ -320,7 +320,7 @@ Sub CreateTxnTables()
                 income_count = income_count + 1
                 
                 ' if that rows year equals this year's loop, add to the income
-                If Year(year_cell) = yr Then
+                If Year(year_cell) <= yr Then
                     income_sum = income_sum + currency_gain_tbl.ListColumns("Coins Gained").DataBodyRange(income_count, 1).value
                 
                 End If
@@ -336,7 +336,7 @@ Sub CreateTxnTables()
            For Each year_cell In currency_sell_tbl.ListColumns("Date of Sale").DataBodyRange
                 sell_count = sell_count + 1
                 
-                If Year(year_cell) = yr Then
+                If Year(year_cell) <= yr Then
                     sell_sum = sell_sum + currency_sell_tbl.ListColumns("Coins Sold (#)").DataBodyRange(sell_count, 1).value
                 
                 End If
