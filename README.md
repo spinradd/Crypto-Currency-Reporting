@@ -74,8 +74,8 @@ Once run, each cryptocurrency will recieve their own summaries sheet with 5 tota
 
 Each table is automatically named something when created as these naming coventions are required for other macros throughout the reporting process.
 
-Lastly, one more sheet ("Portfolio_Summary") is produced. On this sheet are tables that summarize your long/short gain/loss and income for each different
-currency across one year: Table 6. There will be as many tables on this sheet as there are active years in your Transaction table.
+Lastly, two more sheets ("Portfolio_Summary" and "Sales_Summary") are produced. On this sheet are tables that summarize your long/short gain/loss and income for each different
+currency across one year: Table 6. "Portfolio_Summary" analyzes your holdings and gains/losses for one year for each position. 'Sales_Summary" combines each transaction for one year for every year of activity. There will be as many tables on these sheets as there are active years in your Transaction table.
 
 ## Calculations
 The gains and losses from sales are calculated using FIFO. Where your earliest aquired assets are sold first to satisfy a sale. Although not the most complicated and
