@@ -365,6 +365,12 @@ Sub CreateTxnTables()
     
 End Sub
 
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                                        
 Sub Make_New_Sheet_Txn(ticker As String)
     
     
@@ -546,4 +552,155 @@ ThisWorkbook.Worksheets("Transaction").Move before:=ThisWorkbook.Worksheets(1)
 ThisWorkbook.Worksheets("Control Center").Move after:=ThisWorkbook.Worksheets(1)
 ThisWorkbook.Worksheets("Portfolio_Summary").Move after:=ThisWorkbook.Worksheets(2)
 
+End Sub
+
+
+
+
+
+
+
+
+
+
+Sub create_sale_sheet(tick_arr As Variant)
+
+'''creates comprehensive sheet of all sales of all coins
+
+
+    ' create sheet name for portfolio sheet
+    sheetnm = "Sales_Summary"
+    
+    ' if this sheet alrready exists delete it
+    For Each Sheet In ThisWorkbook.Worksheets
+    If Sheet.Name = sheetnm Then
+        Sheet.Delete
+    End If
+    Next Sheet
+    
+    ' create new sheet, set it to a variable
+    Sheets.Add after:=ThisWorkbook.Worksheets("Control Center")
+    ActiveSheet.Name = sheetnm
+    Set sales_sht = Worksheets(sheetnm)
+    
+    ' length of rows needed for table = number of crypto currencies
+    Length = UBound(tick_arr) - LBound(tick_arr) + 1
+                
+    ' min/max year from transaction table
+    Min_Year = Year(Application.WorksheetFunction.Min(Worksheets("Transaction").ListObjects("Transaction_tbl").ListColumns("Date (UTC)").DataBodyRange))
+    Max_Year = Year(Application.WorksheetFunction.Max(Worksheets("Transaction").ListObjects("Transaction_tbl").ListColumns("Date (UTC)").DataBodyRange))
+    
+    'for each year in range...
+    year_count = 0
+    For yr = Min_Year To Max_Year
+        ' go to next year
+        year_count = year_count + 1
+        
+        ' create table for each year
+        ' set top left corner of table to range, set bottom right corner of table to range
+        Set Top_Left = sales_sht.Range("A2").Offset(0, (year_count - 1) * 12)
+        Set Bottom_Right = Top_Left.Offset(1, 10)
+        ' set table range
+        table_range = Top_Left.Address & ":" & Bottom_Right.Address
+        
+        ' create table
+        Set sale_table = ActiveSheet.ListObjects.Add(xlSrcRange, Range(table_range), , xlYes)
+        
+        ' name table
+        sale_table.Name = yr & "_sales_tbl"
+        
+        ' create listcolumn names for table
+            sale_table.HeaderRowRange(1, 1) = "Ticker"
+            sale_table.HeaderRowRange(1, 2) = "Date of Sale"
+            sale_table.HeaderRowRange(1, 3) = "Coins Sold (#)"
+            sale_table.HeaderRowRange(1, 4) = "Sell Price:"
+            sale_table.HeaderRowRange(1, 5) = "Cost Basis of Sale"
+            sale_table.HeaderRowRange(1, 6) = "Value of Sale"
+            sale_table.HeaderRowRange(1, 7) = "Gain:"
+            sale_table.HeaderRowRange(1, 8) = "% Gain Above 1 Year"
+            sale_table.HeaderRowRange(1, 9) = "Loss:"
+            sale_table.HeaderRowRange(1, 10) = "% Loss Above 1 Year"
+            sale_table.HeaderRowRange(1, 11) = "Realized Value"
+            
+            Set all_sale_tick = sale_table.ListColumns("Ticker").DataBodyRange
+            Set all_sale_date = sale_table.ListColumns("Date of Sale").DataBodyRange
+            Set all_sale_gain = sale_table.ListColumns("Gain:").DataBodyRange
+            Set all_sale_loss = sale_table.ListColumns("Loss:").DataBodyRange
+            'Set sum_sale_total = sale_table.ListColumns("Total:").DataBodyRange
+            Set all_sale_coin = sale_table.ListColumns("Coins Sold (#)").DataBodyRange
+            Set all_gain_year = sale_table.ListColumns("% Gain Above 1 Year").DataBodyRange
+            Set all_loss_year = sale_table.ListColumns("% Loss Above 1 Year").DataBodyRange
+            Set all_coin_price = sale_table.ListColumns("Sell Price:").DataBodyRange
+            Set all_cost_basis_col = sale_table.ListColumns("Cost Basis of Sale").DataBodyRange
+            Set all_total_value_col = sale_table.ListColumns("Value of Sale").DataBodyRange
+            Set realized_total_col = sale_table.ListColumns("Realized Value").DataBodyRange
+        
+        ' put year on top of table
+        sale_table.HeaderRowRange(1, 1).Offset(-1, 0).value = yr
+        
+        ' center year label across rows
+        Set saleRng = Range(sale_table.HeaderRowRange(1, 1).Offset(-1, 0).Address & ":" & sale_table.HeaderRowRange(1, 9).Offset(-1, 0).Address)
+        saleRng.HorizontalAlignment = xlCenterAcrossSelection
+       
+        
+        ' add row to table
+        If sale_table.Range.Rows.Count < 1 Then
+                sale_table.ListRows.Add
+        End If
+        
+    
+        ' for each cell in the year table...
+        ticker_count = 0
+        sale_count = 0
+        For Each tick In tick_arr
+           
+           ' set variable to that coin's sheet's summary table
+           Set coin_tbl = Worksheets(tick & "_txn").ListObjects(LCase(CStr(tick)) & "_summary_tbl_txn")
+           
+         ' ' If tick = "DOGE" Then
+         '  Stop
+          ' End If
+           
+            Set sum_sale_num = coin_tbl.ListColumns("Sale Number:").DataBodyRange
+            Set sum_sale_date = coin_tbl.ListColumns("Date of Sale").DataBodyRange
+            Set sum_sale_gain = coin_tbl.ListColumns("Gain:").DataBodyRange
+            Set sum_sale_loss = coin_tbl.ListColumns("Loss:").DataBodyRange
+            'Set sum_sale_total = coin_tbl.ListColumns("Total:").DataBodyRange
+            Set sum_sale_coin = coin_tbl.ListColumns("Coins Sold (#)").DataBodyRange
+            Set sum_gain_year = coin_tbl.ListColumns("% Gain Above 1 Year").DataBodyRange
+            Set sum_loss_year = coin_tbl.ListColumns("% Loss Above 1 Year").DataBodyRange
+            Set sum_coin_price = coin_tbl.ListColumns("Sell Price:").DataBodyRange
+            Set sum_cost_basis_col = coin_tbl.ListColumns("Cost Basis of Sale").DataBodyRange
+            Set sum_total_value_col = coin_tbl.ListColumns("Value of Sale").DataBodyRange
+            
+            txn_sale_count = 0
+           For Each cell In sum_sale_num
+            txn_sale_count = txn_sale_count + 1
+            If Year(sum_sale_date(txn_sale_count, 1).value) = yr Then
+                sale_count = sale_count + 1
+                all_sale_tick(sale_count, 1).value = tick
+                all_sale_date(sale_count, 1).value = sum_sale_date(txn_sale_count, 1).value
+                all_sale_gain(sale_count, 1).value = sum_sale_gain(txn_sale_count, 1).value
+                all_sale_loss(sale_count, 1).value = sum_sale_loss(txn_sale_count, 1).value
+                all_sale_coin(sale_count, 1).value = sum_sale_coin(txn_sale_count, 1).value
+                all_gain_year(sale_count, 1).value = sum_gain_year(txn_sale_count, 1).value
+                all_loss_year(sale_count, 1).value = sum_loss_year(txn_sale_count, 1).value
+                all_coin_price(sale_count, 1).value = sum_coin_price(txn_sale_count, 1).value
+                all_cost_basis_col(sale_count, 1).value = sum_cost_basis_col(txn_sale_count, 1).value
+                all_total_value_col(sale_count, 1).value = sum_total_value_col(txn_sale_count, 1).value
+                realized_total_col(sale_count, 1).value = all_sale_gain(sale_count, 1).value + all_sale_loss(sale_count, 1).value
+                sale_table.ListRows.Add
+            End If
+           Next cell
+        Next
+        
+        
+        ' format table
+        With sale_table
+            .DataBodyRange.HorizontalAlignment = xlRight
+            all_cost_basis_col.NumberFormat = "$#,##0.00_);($#,##0.00)"
+            all_total_value_col.NumberFormat = "$#,##0.00_);($#,##0.00)"
+        End With
+        
+    Next yr
 End Sub
